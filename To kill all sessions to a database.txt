@@ -1,0 +1,17 @@
+USE [Master];
+GO
+DECLARE @dbname sysname
+SET @dbname = 'tempdb'
+
+DECLARE @spid int
+SELECT spid  from master.dbo.sysprocesses where dbid = db_id(@dbname)
+SELECT @spid = min(spid) from master.dbo.sysprocesses where dbid = db_id(@dbname)
+SELECT @spid 
+WHILE @spid IS NOT NULL
+    BEGIN
+    EXECUTE ('KILL ' + @spid)
+    SELECT @spid = min(spid) from master.dbo.sysprocesses where dbid = db_id(@dbname) AND spid > @spid
+    END
+Print ' All Connections Closed'
+
+
