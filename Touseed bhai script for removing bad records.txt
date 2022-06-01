@@ -1,0 +1,26 @@
+--This script was created by Tausif bhai to find duplicates in 3 columns which are ssn, indiv_created and i_id
+
+--we wanted the i_id of the records which are duplicates in ssn and are the least dates 
+
+--select * from 
+-- ##temp
+select ssn,count(*) from ##temp group by ssn
+
+
+select 'Good records list' col1
+select * from ##temp A
+inner join (select ssn, min(indiv_created) as mindate from ##temp group by ssn) B
+on A.indiv_created =B.mindate
+and
+A.ssn = B.ssn;
+
+select 'bad records list' col2
+
+--select ssn , min(indiv_created) ic into ##T2 from ##temp group by ssn
+select * from ##temp A
+left join ##T2 B
+on A.ssn = B.ssn
+and 
+	A.indiv_created = B.ic
+where B.ssn is null
+

@@ -1,0 +1,21 @@
+
+DECLARE @tableHTML1  NVARCHAR(MAX) 
+
+BEGIN
+SET @tableHTML1 = 
+--Write whatever you want to receive in email here
+    N'The query to create completed
+	' +
+    N'</table>';
+
+EXEC msdb.dbo.sp_send_dbmail 
+	@profile_name = 'DB Ops',--change profile name here
+	@recipients='yousufsiddiqui@hsfranchise.com',
+	@subject = 'The task completed',
+	@body = @tableHTML1,
+	@body_format = 'HTML' ;
+	end
+
+	
+	-- to query the profile name in sql server
+	EXEC msdb.dbo.sysmail_help_profile_sp;

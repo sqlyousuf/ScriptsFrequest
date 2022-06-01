@@ -1,0 +1,40 @@
+declare @cmd nvarchar(max)
+set @cmd = ''
+
+-- Build command to update statistics
+select @cmd = @cmd+
+'
+use '+quotename(a.name)+'
+
+print 	''***	Start Update Statistics for database ''+quotename(db_name())+
+	'' at ''+convert(varchar(30),getdate(),121)
+
+exec sp_updatestats
+
+print 	''***	End   Update Statistics for database ''+quotename(db_name())+
+	'' at ''+convert(varchar(30),getdate(),121)
+
+'
+from
+	(
+	select top 100 percent
+		aa.name
+	from
+		sys.sysdatabases aa
+	where
+		-- Exclude system database
+		-- Add more database names to exclude as needed.
+		name not in  ('master','model','msdb','tempdb')	and
+		-- Include only databases that are online
+		databasepropertyex(aa.name,'Status') = 'ONLINE'	and
+		-- Include only databases that are updatable
+		databasepropertyex(aa.name,'Updateability') = 'READ_WRITE'	and
+		-- Exclude databases in single user mode
+		databasepropertyex(aa.name,'UserAccess ') in ('RESTRICTED_USER','MULTI_USER')
+	order by
+		aa.name
+	) a
+
+print '***	Start Update Statistics at '+convert(varchar(30),getdate(),121)
+exec ( @cmd )	-- Execute Update Statistics commands
+print '***	End   Update Statistics at '+convert(varchar(30),getdate(),121)

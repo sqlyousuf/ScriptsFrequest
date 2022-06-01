@@ -1,0 +1,4 @@
+--Open command prompt 
+--try running the file from command prompt if it does not work then do this from command prompt
+
+msiexec /i awscli32.msi

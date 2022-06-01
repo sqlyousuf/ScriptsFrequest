@@ -1,0 +1,5 @@
+EXEC dbo.sp_configure 'max degree of parallelism', 8;
+GO
+RECONFIGURE;
+GO
+Its easy to change from SSMS rightlick properties>Advanced>Second last option

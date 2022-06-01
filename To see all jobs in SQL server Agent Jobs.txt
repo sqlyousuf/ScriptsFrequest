@@ -1,0 +1,3 @@
+SELECT count(name) FROM msdb.dbo.sysjobs;
+
+SELECT name FROM msdb.dbo.sysjobs;
